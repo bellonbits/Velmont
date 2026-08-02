@@ -1,33 +1,46 @@
-# React + TypeScript + Vite
+# Velmont
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A watch e-commerce storefront with an admin dashboard, built with React + Vite on the frontend and Express + SQLite on the backend.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Browse, filter, and search watches by brand, gender, movement, and price
+- Product pages, favourites, cart, and checkout with saved delivery locations
+- Email/password auth with sessions, plus security-question-based password reset
+- Admin dashboard (email allowlist) for managing inventory and viewing store analytics
+- Google Places autocomplete for delivery addresses
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+cp .env.example .env   # fill in VITE_GOOGLE_MAPS_API_KEY and ADMIN_EMAILS
+npm run dev             # runs the Vite dev server and the API concurrently
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-# Velmont
+The app runs at `http://localhost:5173`, proxying `/api` to the Express server.
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Run the Vite client and Express API together with hot reload |
+| `npm run build` | Type-check and build for production |
+| `npm run lint` | Run Oxlint |
+| `npm run preview` | Preview the production build |
+| `npm run server` | Run the API server standalone |
+
+## Project structure
+
+```
+src/       React frontend (pages, components, contexts, lib)
+server/    Express API, SQLite schema/migrations, routes
+public/    Static assets and product images
+```
+
+## Environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_GOOGLE_MAPS_API_KEY` | Google Maps/Places key for address autocomplete |
+| `ADMIN_EMAILS` | Comma-separated emails granted admin access on signup/signin |
