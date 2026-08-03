@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ProductImage } from "../components/ProductImage";
 import { BottomNav } from "../components/BottomNav";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { FilterSheet, EMPTY_FILTERS } from "../components/FilterSheet";
 import type { FilterState } from "../components/FilterSheet";
 import { brands } from "../data/brands";
@@ -97,18 +98,21 @@ export function Home() {
               </Link>
             )}
           </div>
-          <Link
-            to={user ? "/account" : "/signin"}
-            className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700 md:hidden"
-          >
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-neutral-500 dark:text-neutral-300">
-                {user ? user.name[0]?.toUpperCase() : <PersonIcon />}
-              </div>
-            )}
-          </Link>
+          <div className="flex flex-shrink-0 items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <Link
+              to={user ? "/account" : "/signin"}
+              className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700"
+            >
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-neutral-500 dark:text-neutral-300">
+                  {user ? user.name[0]?.toUpperCase() : <PersonIcon />}
+                </div>
+              )}
+            </Link>
+          </div>
         </div>
 
         <h1 className="mt-6 text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 md:text-3xl">

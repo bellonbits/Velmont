@@ -29,8 +29,17 @@ function useVisitTracking() {
   }, [location.pathname]);
 }
 
+function useScrollToTopOnNavigate() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+}
+
 function App() {
   useVisitTracking();
+  useScrollToTopOnNavigate();
 
   return (
     <Routes>

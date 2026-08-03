@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomNav } from "../components/BottomNav";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { ProductImage } from "../components/ProductImage";
 import { useCart } from "../context/CartContext";
 import type { CartLine } from "../context/CartContext";
@@ -26,7 +27,10 @@ export function Cart() {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-32 pt-8 md:max-w-3xl md:px-8 md:pb-40 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">My Cart</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">My Cart</h1>
+          <ThemeToggle className="md:hidden" />
+        </div>
 
         {cartLines.length === 0 && (
           <div className="mt-10 flex flex-col items-center gap-2 text-center">

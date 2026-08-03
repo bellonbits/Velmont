@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth, ApiError } from "../context/AuthContext";
 import { BottomNav } from "../components/BottomNav";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { AddressAutocomplete } from "../components/AddressAutocomplete";
 import type { PlaceSelection } from "../components/AddressAutocomplete";
 import { api } from "../lib/api";
@@ -117,14 +118,17 @@ export function Account() {
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-4xl md:px-8 md:pt-28">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Account</h1>
-          {user?.isAdmin && (
-            <Link
-              to="/admin"
-              className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
-            >
-              Admin Dashboard
-            </Link>
-          )}
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="md:hidden" />
+            {user?.isAdmin && (
+              <Link
+                to="/admin"
+                className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
+              >
+                Admin Dashboard
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="mt-4 flex items-center gap-3 rounded-2xl bg-neutral-50 p-4 dark:bg-neutral-900">

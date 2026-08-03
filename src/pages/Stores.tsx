@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { BottomNav } from "../components/BottomNav";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { StoreMap } from "../components/StoreMap";
 import { stores } from "../data/stores";
 
@@ -29,7 +30,10 @@ export function Stores() {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-5xl md:px-8 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Nearby Stores</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Nearby Stores</h1>
+          <ThemeToggle className="md:hidden" />
+        </div>
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           Visit us in person to try on watches before you buy.
         </p>

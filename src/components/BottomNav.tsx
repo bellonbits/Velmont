@@ -14,7 +14,6 @@ const items = [
 export function BottomNav() {
   return (
     <>
-      <ThemeToggle className="fixed right-4 top-4 z-20 bg-white/90 backdrop-blur dark:bg-neutral-950/90 md:hidden" />
       <MobileTabBar />
       <DesktopHeader />
     </>

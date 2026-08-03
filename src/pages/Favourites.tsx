@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BottomNav } from "../components/BottomNav";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { ProductImage } from "../components/ProductImage";
 import { api } from "../lib/api";
 import { formatPrice } from "../lib/format";
@@ -28,7 +29,10 @@ export function Favourites() {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-6 pt-8 md:max-w-5xl md:px-8 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">My Favourites</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">My Favourites</h1>
+          <ThemeToggle className="md:hidden" />
+        </div>
 
         {productIds === null && (
           <p className="mt-10 text-center text-sm text-neutral-400 dark:text-neutral-500">Loading…</p>
