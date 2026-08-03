@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../db.js";
+import { supabaseAdmin } from "../supabase.js";
 
 export const productsRouter = Router();
 
@@ -27,13 +27,17 @@ export function serializeProduct(row) {
   };
 }
 
-productsRouter.get("/", (_req, res) => {
-  const rows = db.prepare("SELECT * FROM products ORDER BY created_at DESC").all();
-  res.json({ products: rows.map(serializeProduct) });
+productsRouter.get("/", async (_req, res) => {
+  const { data, error } = await supabaseAdmin
+    .from("products")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ products: data.map(serializeProduct) });
 });
 
-productsRouter.get("/:id", (req, res) => {
-  const row = db.prepare("SELECT * FROM products WHERE id = ?").get(req.params.id);
-  if (!row) return res.status(404).json({ error: "Product not found." });
-  res.json({ product: serializeProduct(row) });
+productsRouter.get("/:id", async (req, res) => {
+  const { data } = await supabaseAdmin.from("products").select("*").eq("id", req.params.id).single();
+  if (!data) return res.status(404).json({ error: "Product not found." });
+  res.json({ product: serializeProduct(data) });
 });

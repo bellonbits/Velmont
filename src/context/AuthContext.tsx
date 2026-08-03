@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { api, ApiError } from "../lib/api";
+import { supabase } from "../lib/supabaseClient";
 import type { User } from "../lib/apiTypes";
 
 interface AuthContextValue {
@@ -26,16 +27,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api
-      .get<{ user: User }>("/auth/me")
-      .then((res) => setUser(res.user))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+  const refreshMe = useCallback(async () => {
+    try {
+      const res = await api.get<{ user: User }>("/auth/me");
+      setUser(res.user);
+    } catch {
+      setUser(null);
+    }
   }, []);
 
+  useEffect(() => {
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => (session ? refreshMe() : setUser(null)))
+      .finally(() => setLoading(false));
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") setUser(null);
+    });
+    return () => subscription.unsubscribe();
+  }, [refreshMe]);
+
   const signIn = useCallback(async (email: string, password: string) => {
-    const res = await api.post<{ user: User }>("/auth/signin", { email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw new ApiError(error.message, 401);
+    await api.post("/auth/sync-admin");
+    const res = await api.get<{ user: User }>("/auth/me");
     setUser(res.user);
   }, []);
 
@@ -47,10 +66,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       securityQuestion: string,
       securityAnswer: string,
     ) => {
-      const res = await api.post<{ user: User }>("/auth/signup", {
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) throw new ApiError(error.message, 400);
+
+      const res = await api.post<{ user: User }>("/auth/profile", {
         name,
-        email,
-        password,
         securityQuestion,
         securityAnswer,
       });
@@ -60,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signOut = useCallback(async () => {
-    await api.post("/auth/signout");
+    await supabase.auth.signOut();
     setUser(null);
   }, []);
 

@@ -26,18 +26,18 @@ export function Favourites() {
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-6 pt-8 md:max-w-5xl md:px-8 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 md:text-3xl">My Favourites</h1>
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">My Favourites</h1>
 
         {productIds === null && (
-          <p className="mt-10 text-center text-sm text-neutral-400">Loading…</p>
+          <p className="mt-10 text-center text-sm text-neutral-400 dark:text-neutral-500">Loading…</p>
         )}
 
         {productIds !== null && favouriteProducts.length === 0 && (
           <div className="mt-10 flex flex-col items-center gap-2 text-center">
-            <p className="text-sm text-neutral-400">You haven't favourited any watches yet.</p>
-            <Link to="/home" className="text-sm font-semibold text-amber-700 underline">
+            <p className="text-sm text-neutral-400 dark:text-neutral-500">You haven't favourited any watches yet.</p>
+            <Link to="/home" className="text-sm font-semibold text-amber-700 underline dark:text-amber-500">
               Browse the collection
             </Link>
           </div>
@@ -53,24 +53,24 @@ export function Favourites() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="relative rounded-2xl bg-neutral-50 p-3"
+                className="relative rounded-2xl bg-neutral-50 p-3 dark:bg-neutral-900"
               >
                 <button
                   onClick={() => handleRemove(p.id)}
                   aria-label="Remove from favourites"
-                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white text-rose-500 shadow"
+                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white text-rose-500 shadow dark:bg-neutral-800 dark:text-rose-400"
                 >
                   <HeartIcon />
                 </button>
                 <Link to={`/product/${p.id}`} className="block">
-                  <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-white">
+                  <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-white dark:bg-neutral-800">
                     <ProductImage product={p} className="h-full w-full p-2" />
                   </div>
-                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
+                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
                     {brand?.name}
                   </p>
-                  <p className="text-sm font-medium text-neutral-900">{p.name}</p>
-                  <p className="mt-1 text-sm font-semibold text-neutral-900">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{p.name}</p>
+                  <p className="mt-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {formatPrice(p.price)}
                   </p>
                 </Link>

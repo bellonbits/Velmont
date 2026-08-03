@@ -1,4 +1,4 @@
-import { db } from "./db.js";
+import { supabaseAdmin } from "./supabase.js";
 
 const seedProducts = [
   {
@@ -267,40 +267,36 @@ const seedProducts = [
   },
 ];
 
-export function seedProductsIfEmpty() {
-  const { count } = db.prepare("SELECT COUNT(*) as count FROM products").get();
+export async function seedProductsIfEmpty() {
+  const { count } = await supabaseAdmin.from("products").select("*", { count: "exact", head: true });
   if (count > 0) return;
 
-  const insert = db.prepare(`
-    INSERT INTO products (
-      id, brand_id, name, price, rating, review_count, image, case_color, dial_color,
-      strap_type, strap_color, case_size_mm, movement, case_shape, resistance_m,
-      gender, warranty_years, description, stock_quantity
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+  const rows = seedProducts.map((p) => ({
+    id: p.id,
+    brand_id: p.brandId,
+    name: p.name,
+    price: p.price,
+    rating: p.rating,
+    review_count: p.reviewCount,
+    image: p.image,
+    case_color: p.caseColor,
+    dial_color: p.dialColor,
+    strap_type: p.strapType,
+    strap_color: p.strapColor,
+    case_size_mm: p.caseSizeMm,
+    movement: p.movement,
+    case_shape: p.caseShape,
+    resistance_m: p.resistanceM,
+    gender: p.gender,
+    warranty_years: p.warrantyYears,
+    description: p.description,
+    stock_quantity: p.stock,
+  }));
 
-  for (const p of seedProducts) {
-    insert.run(
-      p.id,
-      p.brandId,
-      p.name,
-      p.price,
-      p.rating,
-      p.reviewCount,
-      p.image,
-      p.caseColor,
-      p.dialColor,
-      p.strapType,
-      p.strapColor,
-      p.caseSizeMm,
-      p.movement,
-      p.caseShape,
-      p.resistanceM,
-      p.gender,
-      p.warrantyYears,
-      p.description,
-      p.stock,
-    );
+  const { error } = await supabaseAdmin.from("products").insert(rows);
+  if (error) {
+    console.error("Failed to seed products:", error.message);
+    return;
   }
 
   console.log(`Seeded ${seedProducts.length} products.`);

@@ -64,14 +64,14 @@ export function FilterSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-40 mx-auto max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white px-5 pb-8 pt-4"
+            className="fixed inset-x-0 bottom-0 z-40 mx-auto max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white px-5 pb-8 pt-4 dark:bg-neutral-900"
           >
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-neutral-200" />
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-neutral-200 dark:bg-neutral-700" />
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-neutral-900">Filters</h2>
+              <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Filters</h2>
               <button
                 onClick={() => setDraft(EMPTY_FILTERS)}
-                className="text-xs font-semibold text-amber-700"
+                className="text-xs font-semibold text-amber-700 dark:text-amber-500"
               >
                 Reset
               </button>
@@ -122,7 +122,7 @@ export function FilterSheet({
             <FilterGroup title="Price">
               <div className="flex flex-col gap-2">
                 {PRICE_OPTIONS.map((opt) => (
-                  <label key={opt.label} className="flex items-center gap-2 text-sm text-neutral-700">
+                  <label key={opt.label} className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
                     <input
                       type="radio"
                       name="maxPrice"
@@ -141,7 +141,7 @@ export function FilterSheet({
                 onApply(draft);
                 onClose();
               }}
-              className="mt-6 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white"
+              className="mt-6 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
             >
               Show results
             </motion.button>
@@ -155,7 +155,7 @@ export function FilterSheet({
 function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-5">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
         {title}
       </p>
       {children}
@@ -178,8 +178,8 @@ function Chip({
       onClick={onClick}
       className={`rounded-full border px-3.5 py-2 text-xs font-semibold ${
         active
-          ? "border-neutral-900 bg-neutral-900 text-white"
-          : "border-neutral-200 text-neutral-700"
+          ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
+          : "border-neutral-200 text-neutral-700 dark:border-neutral-700 dark:text-neutral-300"
       }`}
     >
       {children}

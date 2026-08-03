@@ -148,7 +148,7 @@ export function AddressAutocomplete({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder ?? "Street address"}
-          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
         />
         <button
           type="button"
@@ -156,19 +156,19 @@ export function AddressAutocomplete({
           disabled={!ready || locating}
           aria-label="Use my current location"
           title="Use my current location"
-          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 disabled:opacity-40"
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 disabled:opacity-40 dark:border-neutral-700 dark:text-neutral-400"
         >
           {locating ? <SpinnerIcon /> : <LocateIcon />}
         </button>
       </div>
-      {locateError && <p className="mt-1 text-[11px] text-rose-600">{locateError}</p>}
+      {locateError && <p className="mt-1 text-[11px] text-rose-600 dark:text-rose-400">{locateError}</p>}
       {failed && (
-        <p className="mt-1 text-[11px] text-neutral-400">
+        <p className="mt-1 text-[11px] text-neutral-400 dark:text-neutral-500">
           Address search unavailable — you can still type your address manually.
         </p>
       )}
       {!ready && !failed && (
-        <p className="mt-1 text-[11px] text-neutral-400">Loading address search…</p>
+        <p className="mt-1 text-[11px] text-neutral-400 dark:text-neutral-500">Loading address search…</p>
       )}
     </div>
   );

@@ -113,32 +113,32 @@ export function Account() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-4xl md:px-8 md:pt-28">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-neutral-900 md:text-3xl">Account</h1>
+          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Account</h1>
           {user?.isAdmin && (
             <Link
               to="/admin"
-              className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold text-white"
+              className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
             >
               Admin Dashboard
             </Link>
           )}
         </div>
 
-        <div className="mt-4 flex items-center gap-3 rounded-2xl bg-neutral-50 p-4">
+        <div className="mt-4 flex items-center gap-3 rounded-2xl bg-neutral-50 p-4 dark:bg-neutral-900">
           <button
             onClick={() => fileInputRef.current?.click()}
             aria-label="Change profile photo"
-            className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-900 text-lg font-semibold text-white"
+            className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-900 text-lg font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
           >
             {user?.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
             ) : (
               user?.name?.[0]?.toUpperCase()
             )}
-            <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-[10px] font-medium opacity-0 transition hover:opacity-100">
+            <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-[10px] font-medium text-white opacity-0 transition hover:opacity-100">
               {uploadingAvatar ? "…" : "Edit"}
             </span>
           </button>
@@ -157,38 +157,38 @@ export function Account() {
                   autoFocus
                   value={nameDraft}
                   onChange={(e) => setNameDraft(e.target.value)}
-                  className="w-full rounded-lg border border-neutral-200 px-2 py-1 text-sm outline-none"
+                  className="w-full rounded-lg border border-neutral-200 px-2 py-1 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
                 />
                 <button
                   onClick={handleSaveName}
                   disabled={savingName}
-                  className="text-xs font-semibold text-amber-700"
+                  className="text-xs font-semibold text-amber-700 dark:text-amber-500"
                 >
                   {savingName ? "…" : "Save"}
                 </button>
               </div>
             ) : (
-              <p className="flex items-center gap-2 text-sm font-semibold text-neutral-900">
+              <p className="flex items-center gap-2 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {user?.name}
                 <button
                   onClick={() => {
                     setNameDraft(user?.name ?? "");
                     setEditingName(true);
                   }}
-                  className="text-xs font-medium text-neutral-400 underline"
+                  className="text-xs font-medium text-neutral-400 underline dark:text-neutral-500"
                 >
                   Edit
                 </button>
               </p>
             )}
-            <p className="text-xs text-neutral-500">{user?.email}</p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">{user?.email}</p>
           </div>
         </div>
-        {profileError && <p className="mt-2 text-xs text-rose-600">{profileError}</p>}
+        {profileError && <p className="mt-2 text-xs text-rose-600 dark:text-rose-400">{profileError}</p>}
 
-        <section className="mt-6 rounded-2xl border border-neutral-200 p-4">
+        <section className="mt-6 rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
               Security Question
             </h2>
             {!editingSecurity && (
@@ -199,7 +199,7 @@ export function Account() {
                   setSecurityError(null);
                   setEditingSecurity(true);
                 }}
-                className="text-xs font-semibold text-amber-700"
+                className="text-xs font-semibold text-amber-700 dark:text-amber-500"
               >
                 {user?.securityQuestion ? "Change" : "Set up"}
               </button>
@@ -211,7 +211,7 @@ export function Account() {
               <select
                 value={securityQuestionDraft}
                 onChange={(e) => setSecurityQuestionDraft(e.target.value)}
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
               >
                 {SECURITY_QUESTIONS.map((q) => (
                   <option key={q} value={q}>
@@ -226,27 +226,27 @@ export function Account() {
                 value={securityAnswerDraft}
                 onChange={(e) => setSecurityAnswerDraft(e.target.value)}
                 placeholder="Answer"
-                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+                className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
               />
-              {securityError && <p className="text-xs text-rose-600">{securityError}</p>}
+              {securityError && <p className="text-xs text-rose-600 dark:text-rose-400">{securityError}</p>}
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveSecurity}
                   disabled={savingSecurity || securityAnswerDraft.trim().length < 2}
-                  className="rounded-lg bg-neutral-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
+                  className="rounded-lg bg-neutral-900 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
                 >
                   {savingSecurity ? "Saving…" : "Save"}
                 </button>
                 <button
                   onClick={() => setEditingSecurity(false)}
-                  className="rounded-lg border border-neutral-200 px-3 py-2 text-xs font-semibold text-neutral-600"
+                  className="rounded-lg border border-neutral-200 px-3 py-2 text-xs font-semibold text-neutral-600 dark:border-neutral-700 dark:text-neutral-400"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <p className="mt-2 text-sm text-neutral-600">
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
               {user?.securityQuestion ?? "Not set up yet — used to reset your password if you forget it."}
             </p>
           )}
@@ -255,12 +255,12 @@ export function Account() {
         <div className="md:grid md:grid-cols-2 md:gap-8">
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
               Delivery Locations
             </h2>
             <button
               onClick={() => setShowLocationForm((v) => !v)}
-              className="text-xs font-semibold text-amber-700"
+              className="text-xs font-semibold text-amber-700 dark:text-amber-500"
             >
               {showLocationForm ? "Cancel" : "+ Add new"}
             </button>
@@ -274,32 +274,32 @@ export function Account() {
             {locations.map((loc) => (
               <div
                 key={loc.id}
-                className="flex items-start justify-between rounded-xl border border-neutral-200 p-3"
+                className="flex items-start justify-between rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
               >
                 <div>
-                  <p className="flex items-center gap-2 text-sm font-semibold text-neutral-900">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {loc.label}
                     {loc.isDefault && (
-                      <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-medium text-white">
+                      <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-medium text-white dark:bg-neutral-100 dark:text-neutral-900">
                         Default
                       </span>
                     )}
                   </p>
-                  <p className="mt-0.5 text-xs text-neutral-500">
+                  <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                     {loc.addressLine}, {loc.city}, {loc.country}
                   </p>
                 </div>
                 <button
                   onClick={() => handleDeleteLocation(loc.id)}
                   aria-label="Delete location"
-                  className="text-xs text-neutral-400 hover:text-rose-600"
+                  className="text-xs text-neutral-400 hover:text-rose-600 dark:text-neutral-500 dark:hover:text-rose-400"
                 >
                   Remove
                 </button>
               </div>
             ))}
             {!loading && locations.length === 0 && !showLocationForm && (
-              <p className="py-4 text-center text-sm text-neutral-400">
+              <p className="py-4 text-center text-sm text-neutral-400 dark:text-neutral-500">
                 No saved locations yet.
               </p>
             )}
@@ -307,29 +307,29 @@ export function Account() {
         </section>
 
         <section className="mt-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
             Order History
           </h2>
           <div className="mt-3 flex flex-col gap-2">
             {orders.map((order) => (
-              <div key={order.id} className="rounded-xl border border-neutral-200 p-3">
+              <div key={order.id} className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-neutral-900">Order #{order.id}</p>
-                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium uppercase text-neutral-600">
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Order #{order.id}</p>
+                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium uppercase text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                     {order.status}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   {new Date(order.createdAt).toLocaleDateString()} · {order.items.length} item
                   {order.items.length === 1 ? "" : "s"}
                 </p>
-                <p className="mt-1 text-sm font-semibold text-neutral-900">
+                <p className="mt-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {formatPrice(order.subtotal)}
                 </p>
               </div>
             ))}
             {!loading && orders.length === 0 && (
-              <p className="py-4 text-center text-sm text-neutral-400">No orders yet.</p>
+              <p className="py-4 text-center text-sm text-neutral-400 dark:text-neutral-500">No orders yet.</p>
             )}
           </div>
         </section>
@@ -338,7 +338,7 @@ export function Account() {
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleSignOut}
-          className="mt-8 w-full rounded-full border border-neutral-200 py-3 text-sm font-semibold text-neutral-600"
+          className="mt-8 w-full rounded-full border border-neutral-200 py-3 text-sm font-semibold text-neutral-600 dark:border-neutral-800 dark:text-neutral-400"
         >
           Sign Out
         </motion.button>
@@ -383,13 +383,13 @@ function LocationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 rounded-xl bg-neutral-50 p-3">
+    <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 rounded-xl bg-neutral-50 p-3 dark:bg-neutral-900">
       <input
         required
         value={label}
         onChange={(e) => setLabel(e.target.value)}
         placeholder="Label (e.g. Home, Office)"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
       />
       <AddressAutocomplete
         required
@@ -403,9 +403,9 @@ function LocationForm({
         value={city}
         onChange={(e) => setCity(e.target.value)}
         placeholder="City"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
       />
-      <label className="flex items-center gap-2 text-xs text-neutral-600">
+      <label className="flex items-center gap-2 text-xs text-neutral-600 dark:text-neutral-400">
         <input
           type="checkbox"
           checked={isDefault}
@@ -416,7 +416,7 @@ function LocationForm({
       <button
         type="submit"
         disabled={submitting}
-        className="mt-1 rounded-lg bg-neutral-900 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="mt-1 rounded-lg bg-neutral-900 py-2 text-sm font-semibold text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
       >
         {submitting ? "Saving…" : "Save location"}
       </button>

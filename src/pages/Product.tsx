@@ -58,15 +58,15 @@ export function Product() {
   if (!product) {
     if (loading) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-white">
-          <p className="text-sm text-neutral-400">Loading…</p>
+        <div className="flex min-h-screen items-center justify-center bg-white dark:bg-neutral-950">
+          <p className="text-sm text-neutral-400 dark:text-neutral-500">Loading…</p>
         </div>
       );
     }
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-        <p className="text-neutral-500">We couldn't find that watch.</p>
-        <Link to="/home" className="text-sm font-semibold underline">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white px-6 text-center dark:bg-neutral-950">
+        <p className="text-neutral-500 dark:text-neutral-400">We couldn't find that watch.</p>
+        <Link to="/home" className="text-sm font-semibold text-neutral-900 underline dark:text-neutral-100">
           Back to collection
         </Link>
       </div>
@@ -82,7 +82,7 @@ export function Product() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="flex min-h-screen flex-col bg-white"
+      className="flex min-h-screen flex-col bg-white dark:bg-neutral-950"
     >
       <div className="mx-auto w-full max-w-md flex-1 md:max-w-5xl md:px-8 md:pb-16 md:pt-28">
         <div className="flex items-center px-5 pt-6 md:px-0 md:pt-0">
@@ -90,7 +90,7 @@ export function Product() {
             whileTap={{ scale: 0.92 }}
             onClick={() => navigate(-1)}
             aria-label="Back"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
             <BackIcon />
           </motion.button>
@@ -112,7 +112,9 @@ export function Product() {
               onClick={toggleFavourite}
               aria-label="Add to favourites"
               className={`absolute right-6 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full shadow-md ${
-                favourited ? "bg-rose-500 text-white" : "bg-white text-neutral-400"
+                favourited
+                  ? "bg-rose-500 text-white"
+                  : "bg-white text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
               }`}
             >
               <HeartIcon filled={favourited} />
@@ -121,7 +123,9 @@ export function Product() {
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
-                  className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-neutral-900" : "bg-neutral-200"}`}
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    i === 0 ? "bg-neutral-900 dark:bg-neutral-100" : "bg-neutral-200 dark:bg-neutral-700"
+                  }`}
                 />
               ))}
             </div>
@@ -131,12 +135,12 @@ export function Product() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
-            className="mt-4 rounded-t-3xl bg-white px-5 pb-32 pt-5 md:mt-0 md:rounded-none md:px-0 md:pb-0"
+            className="mt-4 rounded-t-3xl bg-white px-5 pb-32 pt-5 dark:bg-neutral-950 md:mt-0 md:rounded-none md:px-0 md:pb-0"
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
               {brand?.name}
             </p>
-            <h1 className="mt-1 text-2xl font-semibold text-neutral-900 md:text-3xl">{product.name}</h1>
+            <h1 className="mt-1 text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">{product.name}</h1>
             <div className="mt-2">
               <StarRating rating={product.rating} count={product.reviewCount} />
             </div>
@@ -156,14 +160,14 @@ export function Product() {
               />
             </div>
 
-            <p className="mt-6 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-6 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
               {product.description}
             </p>
 
             <div className="mt-8 hidden items-center gap-4 md:flex">
               <div>
-                <p className="text-xs text-neutral-400">Price for 1</p>
-                <p className="text-2xl font-semibold text-neutral-900">
+                <p className="text-xs text-neutral-400 dark:text-neutral-500">Price for 1</p>
+                <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
                   {formatPrice(product.price)}
                 </p>
               </div>
@@ -171,7 +175,7 @@ export function Product() {
                 whileTap={{ scale: outOfStock ? 1 : 0.97 }}
                 onClick={handleAddToCart}
                 disabled={outOfStock}
-                className="flex-1 rounded-full bg-amber-700 py-4 text-sm font-semibold text-white transition hover:bg-amber-800 disabled:bg-neutral-200 disabled:text-neutral-400"
+                className="flex-1 rounded-full bg-amber-700 py-4 text-sm font-semibold text-white transition hover:bg-amber-800 disabled:bg-neutral-200 disabled:text-neutral-400 dark:disabled:bg-neutral-800 dark:disabled:text-neutral-500"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
@@ -191,11 +195,11 @@ export function Product() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md border-t border-neutral-100 bg-white px-5 py-4 md:hidden">
+      <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md border-t border-neutral-100 bg-white px-5 py-4 dark:border-neutral-900 dark:bg-neutral-950 md:hidden">
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-xs text-neutral-400">Price for 1</p>
-            <p className="text-lg font-semibold text-neutral-900">
+            <p className="text-xs text-neutral-400 dark:text-neutral-500">Price for 1</p>
+            <p className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {formatPrice(product.price)}
             </p>
           </div>
@@ -226,10 +230,10 @@ export function Product() {
 function Spec({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-500">
         {label}
       </p>
-      <p className="mt-0.5 text-sm font-medium text-neutral-900">{value}</p>
+      <p className="mt-0.5 text-sm font-medium text-neutral-900 dark:text-neutral-100">{value}</p>
     </div>
   );
 }

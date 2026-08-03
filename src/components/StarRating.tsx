@@ -6,8 +6,8 @@ export function StarRating({ rating, count }: { rating: number; count: number })
           <Star key={i} filled={i < Math.round(rating)} />
         ))}
       </div>
-      <span className="font-semibold text-neutral-900">{rating.toFixed(1)}</span>
-      <span className="text-neutral-400">({count.toLocaleString()})</span>
+      <span className="font-semibold text-neutral-900 dark:text-neutral-100">{rating.toFixed(1)}</span>
+      <span className="text-neutral-400 dark:text-neutral-500">({count.toLocaleString()})</span>
     </div>
   );
 }

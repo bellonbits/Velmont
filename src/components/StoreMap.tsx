@@ -1,6 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { loadGoogleMaps } from "../lib/googleMaps";
+import { useTheme } from "../context/ThemeContext";
 import type { Store } from "../data/stores";
+
+const DARK_MAP_STYLE: google.maps.MapTypeStyle[] = [
+  { elementType: "geometry", stylers: [{ color: "#1a1a1a" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#1a1a1a" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#8a8a8a" }] },
+  { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#3c3c3c" }] },
+  { featureType: "poi", elementType: "geometry", stylers: [{ color: "#262626" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#333333" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#212121" }] },
+  { featureType: "transit", elementType: "geometry", stylers: [{ color: "#262626" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0d0d0d" }] },
+];
 
 export function StoreMap({
   stores,
@@ -11,6 +24,7 @@ export function StoreMap({
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
+  const { theme } = useTheme();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapObjRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<Map<string, google.maps.Marker>>(new Map());
@@ -30,6 +44,7 @@ export function StoreMap({
           zoom: 6,
           disableDefaultUI: true,
           zoomControl: true,
+          styles: theme === "dark" ? DARK_MAP_STYLE : undefined,
         });
         mapObjRef.current = map;
         infoWindowRef.current = new google.maps.InfoWindow();
@@ -64,7 +79,12 @@ export function StoreMap({
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stores, onSelect]);
+
+  useEffect(() => {
+    mapObjRef.current?.setOptions({ styles: theme === "dark" ? DARK_MAP_STYLE : undefined });
+  }, [theme]);
 
   useEffect(() => {
     const map = mapObjRef.current;
@@ -76,11 +96,11 @@ export function StoreMap({
 
   if (failed) {
     return (
-      <div className="flex h-48 md:h-96 items-center justify-center rounded-2xl bg-neutral-100 text-xs text-neutral-400">
+      <div className="flex h-48 md:h-96 items-center justify-center rounded-2xl bg-neutral-100 text-xs text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500">
         Map unavailable
       </div>
     );
   }
 
-  return <div ref={mapRef} className="h-48 md:h-96 w-full overflow-hidden rounded-2xl bg-neutral-100" />;
+  return <div ref={mapRef} className="h-48 md:h-96 w-full overflow-hidden rounded-2xl bg-neutral-100 dark:bg-neutral-800" />;
 }

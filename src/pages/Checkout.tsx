@@ -77,27 +77,27 @@ export function Checkout() {
 
   if (completedOrder) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-white px-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-white px-6 text-center dark:bg-neutral-950">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
             <CheckIcon />
           </div>
-          <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Order placed!</h1>
-          <p className="mt-2 text-sm text-neutral-500">
+          <h1 className="mt-4 text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Order placed!</h1>
+          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
             Order #{completedOrder.id} · {formatPrice(completedOrder.subtotal)}
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <Link
               to="/account"
-              className="rounded-full bg-neutral-900 px-8 py-3.5 text-sm font-semibold text-white"
+              className="rounded-full bg-neutral-900 px-8 py-3.5 text-sm font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
             >
               View order history
             </Link>
-            <Link to="/home" className="text-sm font-semibold text-amber-700 underline">
+            <Link to="/home" className="text-sm font-semibold text-amber-700 underline dark:text-amber-500">
               Continue shopping
             </Link>
           </div>
@@ -108,9 +108,9 @@ export function Checkout() {
 
   if (cartLines.length === 0) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white px-6 text-center">
-        <p className="text-sm text-neutral-400">Your cart is empty.</p>
-        <Link to="/home" className="text-sm font-semibold text-amber-700 underline">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white px-6 text-center dark:bg-neutral-950">
+        <p className="text-sm text-neutral-400 dark:text-neutral-500">Your cart is empty.</p>
+        <Link to="/home" className="text-sm font-semibold text-amber-700 underline dark:text-amber-500">
           Browse the collection
         </Link>
       </div>
@@ -118,20 +118,20 @@ export function Checkout() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-32 pt-8 md:max-w-5xl md:px-8 md:pb-16 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 md:text-3xl">Checkout</h1>
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Checkout</h1>
 
         <div className="md:grid md:grid-cols-3 md:gap-10 md:items-start">
           <div className="md:col-span-2">
             <section className="mt-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
                   Delivery Location
                 </h2>
                 <button
                   onClick={() => setShowLocationForm((v) => !v)}
-                  className="text-xs font-semibold text-amber-700"
+                  className="text-xs font-semibold text-amber-700 dark:text-amber-500"
                 >
                   {showLocationForm ? "Cancel" : "+ Add new"}
                 </button>
@@ -145,8 +145,8 @@ export function Checkout() {
                     key={loc.id}
                     className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${
                       selectedLocationId === loc.id
-                        ? "border-neutral-900"
-                        : "border-neutral-200"
+                        ? "border-neutral-900 dark:border-neutral-100"
+                        : "border-neutral-200 dark:border-neutral-800"
                     }`}
                   >
                     <input
@@ -157,8 +157,8 @@ export function Checkout() {
                       className="mt-1"
                     />
                     <div>
-                      <p className="text-sm font-semibold text-neutral-900">{loc.label}</p>
-                      <p className="mt-0.5 text-xs text-neutral-500">
+                      <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{loc.label}</p>
+                      <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                         {loc.addressLine}, {loc.city}, {loc.country}
                       </p>
                     </div>
@@ -168,7 +168,7 @@ export function Checkout() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
                 Order Summary
               </h2>
               <div className="mt-3 flex flex-col gap-3">
@@ -177,12 +177,12 @@ export function Checkout() {
                   return (
                     <div key={product.id} className="flex items-center justify-between text-sm">
                       <div>
-                        <p className="font-medium text-neutral-900">
+                        <p className="font-medium text-neutral-900 dark:text-neutral-100">
                           {brand?.name} {product.name}
                         </p>
-                        <p className="text-xs text-neutral-400">Qty {line.quantity}</p>
+                        <p className="text-xs text-neutral-400 dark:text-neutral-500">Qty {line.quantity}</p>
                       </div>
-                      <p className="font-semibold text-neutral-900">
+                      <p className="font-semibold text-neutral-900 dark:text-neutral-100">
                         {formatPrice(product.price * line.quantity)}
                       </p>
                     </div>
@@ -191,13 +191,13 @@ export function Checkout() {
               </div>
             </section>
 
-            {error && <p className="mt-4 text-sm text-rose-600 md:hidden">{error}</p>}
+            {error && <p className="mt-4 text-sm text-rose-600 dark:text-rose-400 md:hidden">{error}</p>}
           </div>
 
-          <div className="hidden md:col-span-1 md:sticky md:top-28 md:mt-6 md:block md:rounded-2xl md:border md:border-neutral-200 md:p-5">
-            <p className="text-xs text-neutral-400">Total</p>
-            <p className="text-2xl font-semibold text-neutral-900">{formatPrice(subtotal)}</p>
-            {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
+          <div className="hidden md:col-span-1 md:sticky md:top-28 md:mt-6 md:block md:rounded-2xl md:border md:border-neutral-200 md:p-5 dark:md:border-neutral-800">
+            <p className="text-xs text-neutral-400 dark:text-neutral-500">Total</p>
+            <p className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">{formatPrice(subtotal)}</p>
+            {error && <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={handlePlaceOrder}
@@ -210,11 +210,11 @@ export function Checkout() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md border-t border-neutral-100 bg-white px-5 py-4 md:hidden">
+      <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md border-t border-neutral-100 bg-white px-5 py-4 dark:border-neutral-900 dark:bg-neutral-950 md:hidden">
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-xs text-neutral-400">Total</p>
-            <p className="text-lg font-semibold text-neutral-900">{formatPrice(subtotal)}</p>
+            <p className="text-xs text-neutral-400 dark:text-neutral-500">Total</p>
+            <p className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">{formatPrice(subtotal)}</p>
           </div>
           <motion.button
             whileTap={{ scale: 0.97 }}
@@ -263,13 +263,13 @@ function LocationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 rounded-xl bg-neutral-50 p-3">
+    <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 rounded-xl bg-neutral-50 p-3 dark:bg-neutral-900">
       <input
         required
         value={label}
         onChange={(e) => setLabel(e.target.value)}
         placeholder="Label (e.g. Home, Office)"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
       />
       <AddressAutocomplete
         required
@@ -283,12 +283,12 @@ function LocationForm({
         value={city}
         onChange={(e) => setCity(e.target.value)}
         placeholder="City"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none dark:border-neutral-700 dark:text-neutral-100"
       />
       <button
         type="submit"
         disabled={submitting}
-        className="mt-1 rounded-lg bg-neutral-900 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="mt-1 rounded-lg bg-neutral-900 py-2 text-sm font-semibold text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
       >
         {submitting ? "Saving…" : "Save & use this address"}
       </button>

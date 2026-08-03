@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { ThemeToggle } from "./ThemeToggle";
 
 const items = [
   { to: "/home", label: "Home", icon: HomeIcon },
@@ -13,6 +14,7 @@ const items = [
 export function BottomNav() {
   return (
     <>
+      <ThemeToggle className="fixed right-4 top-4 z-20 bg-white/90 backdrop-blur dark:bg-neutral-950/90 md:hidden" />
       <MobileTabBar />
       <DesktopHeader />
     </>
@@ -23,7 +25,7 @@ function MobileTabBar() {
   const { itemCount } = useCart();
 
   return (
-    <nav className="sticky bottom-0 z-20 border-t border-neutral-200 bg-white/95 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:hidden">
+    <nav className="sticky bottom-0 z-20 border-t border-neutral-200 bg-white/95 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 md:hidden">
       <ul className="mx-auto flex max-w-md items-center justify-between">
         {items.map(({ to, label, icon: Icon, showBadge }) => (
           <li key={to}>
@@ -31,7 +33,7 @@ function MobileTabBar() {
               to={to}
               className={({ isActive }) =>
                 `relative flex flex-col items-center gap-1 px-3 py-1 text-[11px] font-medium ${
-                  isActive ? "text-neutral-900" : "text-neutral-400"
+                  isActive ? "text-neutral-900 dark:text-neutral-100" : "text-neutral-400 dark:text-neutral-500"
                 }`
               }
             >
@@ -61,9 +63,9 @@ function DesktopHeader() {
   const { user } = useAuth();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-20 hidden border-b border-neutral-200 bg-white/95 backdrop-blur md:block">
+    <header className="fixed inset-x-0 top-0 z-20 hidden border-b border-neutral-200 bg-white/95 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95 md:block">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-8 py-4">
-        <Link to="/home" className="text-lg font-semibold tracking-tight text-neutral-900">
+        <Link to="/home" className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
           Velmont
         </Link>
 
@@ -74,7 +76,9 @@ function DesktopHeader() {
                 to={to}
                 className={({ isActive }) =>
                   `relative flex items-center gap-2 text-sm font-medium transition ${
-                    isActive ? "text-neutral-900" : "text-neutral-500 hover:text-neutral-900"
+                    isActive
+                      ? "text-neutral-900 dark:text-neutral-100"
+                      : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
                   }`
                 }
               >
@@ -96,19 +100,22 @@ function DesktopHeader() {
           ))}
         </ul>
 
-        <Link
-          to={user ? "/account" : "/signin"}
-          className="flex items-center gap-2 rounded-full border border-neutral-200 py-1.5 pl-1.5 pr-4 text-sm font-medium text-neutral-700 transition hover:border-neutral-400"
-        >
-          <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-neutral-200 text-xs font-semibold text-neutral-500">
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
-            ) : (
-              user?.name?.[0]?.toUpperCase() ?? <PersonIcon />
-            )}
-          </span>
-          {user ? user.name.split(" ")[0] : "Sign in"}
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            to={user ? "/account" : "/signin"}
+            className="flex items-center gap-2 rounded-full border border-neutral-200 py-1.5 pl-1.5 pr-4 text-sm font-medium text-neutral-700 transition hover:border-neutral-400 dark:border-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600"
+          >
+            <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-neutral-200 text-xs font-semibold text-neutral-500 dark:bg-neutral-700 dark:text-neutral-300">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+              ) : (
+                user?.name?.[0]?.toUpperCase() ?? <PersonIcon />
+              )}
+            </span>
+            {user ? user.name.split(" ")[0] : "Sign in"}
+          </Link>
+        </div>
       </div>
     </header>
   );

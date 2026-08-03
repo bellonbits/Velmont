@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { db } from "../db.js";
-import { getUserFromToken } from "../auth.js";
-import { SESSION_COOKIE } from "../auth.js";
+import { getUserFromRequest } from "../auth.js";
+import { supabaseAdmin } from "../supabase.js";
 
 export const trackRouter = Router();
 
-trackRouter.post("/", (req, res) => {
+trackRouter.post("/", async (req, res) => {
   const { sessionId, path: pagePath } = req.body ?? {};
   if (!sessionId || typeof sessionId !== "string" || sessionId.length > 100) {
     return res.status(400).json({ error: "sessionId is required." });
@@ -14,11 +13,11 @@ trackRouter.post("/", (req, res) => {
     return res.status(400).json({ error: "path is required." });
   }
 
-  const user = getUserFromToken(req.cookies?.[SESSION_COOKIE]);
+  const user = await getUserFromRequest(req);
 
-  db.prepare(
-    "INSERT INTO page_views (session_id, path, user_id) VALUES (?, ?, ?)",
-  ).run(sessionId, pagePath, user?.id ?? null);
+  await supabaseAdmin
+    .from("page_views")
+    .insert({ session_id: sessionId, path: pagePath, user_id: user?.id ?? null });
 
   res.status(204).end();
 });

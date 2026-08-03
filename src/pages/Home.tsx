@@ -65,23 +65,23 @@ export function Home() {
   }, [query, filters, products]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-6 pt-8 md:max-w-5xl md:px-8 md:pt-28">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
               {user ? `Welcome back, ${user.name.split(" ")[0]}!` : "Welcome to Velmont!"}
             </p>
             {user ? (
               defaultLocation ? (
-                <p className="mt-1 flex items-center gap-1 text-sm font-medium text-neutral-900">
+                <p className="mt-1 flex items-center gap-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   <PinIcon />
                   {defaultLocation.addressLine}, {defaultLocation.city}
                 </p>
               ) : (
                 <Link
                   to="/account"
-                  className="mt-1 flex items-center gap-1 text-sm font-medium text-amber-700"
+                  className="mt-1 flex items-center gap-1 text-sm font-medium text-amber-700 dark:text-amber-500"
                 >
                   <PinIcon />
                   Add a delivery location
@@ -90,7 +90,7 @@ export function Home() {
             ) : (
               <Link
                 to="/signin"
-                className="mt-1 flex items-center gap-1 text-sm font-medium text-amber-700"
+                className="mt-1 flex items-center gap-1 text-sm font-medium text-amber-700 dark:text-amber-500"
               >
                 <PinIcon />
                 Sign in for faster checkout
@@ -99,36 +99,36 @@ export function Home() {
           </div>
           <Link
             to={user ? "/account" : "/signin"}
-            className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-neutral-200 md:hidden"
+            className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700 md:hidden"
           >
             {user?.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-neutral-500">
+              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-neutral-500 dark:text-neutral-300">
                 {user ? user.name[0]?.toUpperCase() : <PersonIcon />}
               </div>
             )}
           </Link>
         </div>
 
-        <h1 className="mt-6 text-2xl font-semibold leading-snug text-neutral-900 md:text-3xl">
+        <h1 className="mt-6 text-2xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 md:text-3xl">
           Choose from {brands.length} trusted watch brands
         </h1>
 
         <div className="mt-5 flex items-center gap-2 md:max-w-xl">
-          <div className="flex flex-1 items-center gap-2 rounded-full border border-neutral-200 px-4 py-3">
+          <div className="flex flex-1 items-center gap-2 rounded-full border border-neutral-200 px-4 py-3 dark:border-neutral-800">
             <SearchIcon />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder='Try "Meridian"'
-              className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400"
+              className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
             />
           </div>
           <button
             aria-label="Filters"
             onClick={() => setFilterOpen(true)}
-            className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-neutral-200"
+            className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-800"
           >
             <FilterIcon />
             {activeFilterCount > 0 && (
@@ -147,7 +147,7 @@ export function Home() {
           onApply={setFilters}
         />
 
-        <p className="mt-6 text-xs font-semibold tracking-wide text-neutral-400">
+        <p className="mt-6 text-xs font-semibold tracking-wide text-neutral-400 dark:text-neutral-500">
           POPULAR BRANDS
         </p>
         <motion.div
@@ -173,8 +173,8 @@ export function Home() {
                 }
                 className={`rounded-xl border px-4 py-4 text-center text-sm font-bold tracking-wide transition ${
                   active
-                    ? "border-neutral-900 bg-neutral-900 text-white"
-                    : "border-neutral-200 text-neutral-800 hover:border-neutral-400"
+                    ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
+                    : "border-neutral-200 text-neutral-800 hover:border-neutral-400 dark:border-neutral-800 dark:text-neutral-200 dark:hover:border-neutral-600"
                 }`}
               >
                 {b.name.toUpperCase()}
@@ -196,24 +196,24 @@ export function Home() {
               <motion.div key={p.id} variants={cell} whileTap={{ scale: 0.97 }}>
                 <Link
                   to={`/product/${p.id}`}
-                  className="group block rounded-2xl bg-neutral-50 p-3 transition hover:bg-neutral-100"
+                  className="group block rounded-2xl bg-neutral-50 p-3 transition hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 >
-                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-white">
+                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-white dark:bg-neutral-800">
                     <ProductImage
                       product={p}
                       className={`h-full w-full p-2 ${p.stockQuantity === 0 ? "opacity-40" : ""}`}
                     />
                     {p.stockQuantity === 0 && (
-                      <span className="absolute left-2 top-2 rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-semibold text-white">
+                      <span className="absolute left-2 top-2 rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900">
                         Out of stock
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
+                  <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
                     {brand?.name}
                   </p>
-                  <p className="text-sm font-medium text-neutral-900">{p.name}</p>
-                  <p className="mt-1 text-sm font-semibold text-neutral-900">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{p.name}</p>
+                  <p className="mt-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {formatPrice(p.price)}
                   </p>
                 </Link>
@@ -221,7 +221,7 @@ export function Home() {
             );
           })}
           {filtered.length === 0 && (
-            <p className="col-span-2 py-10 text-center text-sm text-neutral-400">
+            <p className="col-span-2 py-10 text-center text-sm text-neutral-400 dark:text-neutral-500">
               No watches match your search.
             </p>
           )}

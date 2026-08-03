@@ -27,10 +27,10 @@ export function Stores() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-5xl md:px-8 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 md:text-3xl">Nearby Stores</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Nearby Stores</h1>
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           Visit us in person to try on watches before you buy.
         </p>
 
@@ -51,13 +51,15 @@ export function Stores() {
                 variants={cell}
                 onClick={() => setSelectedId(store.id)}
                 className={`w-full rounded-2xl border p-4 text-left transition ${
-                  selectedId === store.id ? "border-neutral-900" : "border-neutral-200"
+                  selectedId === store.id
+                    ? "border-neutral-900 dark:border-neutral-100"
+                    : "border-neutral-200 dark:border-neutral-800"
                 }`}
               >
-                <p className="text-sm font-semibold text-neutral-900">{store.name}</p>
-                <p className="mt-1 text-sm text-neutral-500">{store.addressLine}</p>
-                <p className="text-sm text-neutral-500">{store.city}, Kenya</p>
-                <p className="mt-2 text-xs text-neutral-400">{store.hours}</p>
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{store.name}</p>
+                <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{store.addressLine}</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">{store.city}, Kenya</p>
+                <p className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">{store.hours}</p>
 
                 <div className="mt-3 flex gap-2">
                   <a
@@ -65,14 +67,14 @@ export function Stores() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 rounded-full bg-neutral-900 py-2.5 text-center text-xs font-semibold text-white"
+                    className="flex-1 rounded-full bg-neutral-900 py-2.5 text-center text-xs font-semibold text-white dark:bg-neutral-100 dark:text-neutral-900"
                   >
                     Get directions
                   </a>
                   <a
                     href={telLink(store.phone)}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 rounded-full border border-neutral-200 py-2.5 text-center text-xs font-semibold text-neutral-700"
+                    className="flex-1 rounded-full border border-neutral-200 py-2.5 text-center text-xs font-semibold text-neutral-700 dark:border-neutral-700 dark:text-neutral-300"
                   >
                     Call {store.phone}
                   </a>

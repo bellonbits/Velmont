@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { db } from "../db.js";
 import { requireAuth } from "../auth.js";
+import { supabaseAdmin } from "../supabase.js";
 
 export const locationsRouter = Router();
 locationsRouter.use(requireAuth);
@@ -12,84 +12,95 @@ function serialize(row) {
     addressLine: row.address_line,
     city: row.city,
     country: row.country,
-    isDefault: Boolean(row.is_default),
+    isDefault: row.is_default,
     lat: row.lat ?? null,
     lng: row.lng ?? null,
   };
 }
 
-locationsRouter.get("/", (req, res) => {
-  const rows = db
-    .prepare("SELECT * FROM locations WHERE user_id = ? ORDER BY is_default DESC, created_at DESC")
-    .all(req.user.id);
-  res.json({ locations: rows.map(serialize) });
+locationsRouter.get("/", async (req, res) => {
+  const { data, error } = await supabaseAdmin
+    .from("locations")
+    .select("*")
+    .eq("user_id", req.user.id)
+    .order("is_default", { ascending: false })
+    .order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ locations: data.map(serialize) });
 });
 
-locationsRouter.post("/", (req, res) => {
+locationsRouter.post("/", async (req, res) => {
   const { label, addressLine, city, country, isDefault, lat, lng } = req.body ?? {};
   if (!label || !addressLine || !city) {
     return res.status(400).json({ error: "Label, address, and city are required." });
   }
 
   if (isDefault) {
-    db.prepare("UPDATE locations SET is_default = 0 WHERE user_id = ?").run(req.user.id);
+    await supabaseAdmin.from("locations").update({ is_default: false }).eq("user_id", req.user.id);
   }
 
-  const info = db
-    .prepare(
-      `INSERT INTO locations (user_id, label, address_line, city, country, is_default, lat, lng)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    )
-    .run(
-      req.user.id,
+  const { data, error } = await supabaseAdmin
+    .from("locations")
+    .insert({
+      user_id: req.user.id,
       label,
-      addressLine,
+      address_line: addressLine,
       city,
-      country || "Kenya",
-      isDefault ? 1 : 0,
-      typeof lat === "number" ? lat : null,
-      typeof lng === "number" ? lng : null,
-    );
+      country: country || "Kenya",
+      is_default: Boolean(isDefault),
+      lat: typeof lat === "number" ? lat : null,
+      lng: typeof lng === "number" ? lng : null,
+    })
+    .select()
+    .single();
+  if (error) return res.status(400).json({ error: error.message });
 
-  const row = db.prepare("SELECT * FROM locations WHERE id = ?").get(info.lastInsertRowid);
-  res.status(201).json({ location: serialize(row) });
+  res.status(201).json({ location: serialize(data) });
 });
 
-locationsRouter.put("/:id", (req, res) => {
-  const existing = db
-    .prepare("SELECT * FROM locations WHERE id = ? AND user_id = ?")
-    .get(req.params.id, req.user.id);
+locationsRouter.put("/:id", async (req, res) => {
+  const { data: existing } = await supabaseAdmin
+    .from("locations")
+    .select("*")
+    .eq("id", req.params.id)
+    .eq("user_id", req.user.id)
+    .single();
   if (!existing) return res.status(404).json({ error: "Location not found." });
 
   const { label, addressLine, city, country, isDefault, lat, lng } = req.body ?? {};
 
   if (isDefault) {
-    db.prepare("UPDATE locations SET is_default = 0 WHERE user_id = ?").run(req.user.id);
+    await supabaseAdmin.from("locations").update({ is_default: false }).eq("user_id", req.user.id);
   }
 
-  db.prepare(
-    `UPDATE locations SET label = ?, address_line = ?, city = ?, country = ?, is_default = ?, lat = ?, lng = ?
-     WHERE id = ? AND user_id = ?`,
-  ).run(
-    label ?? existing.label,
-    addressLine ?? existing.address_line,
-    city ?? existing.city,
-    country ?? existing.country,
-    isDefault ? 1 : existing.is_default,
-    typeof lat === "number" ? lat : existing.lat,
-    typeof lng === "number" ? lng : existing.lng,
-    req.params.id,
-    req.user.id,
-  );
+  const { data, error } = await supabaseAdmin
+    .from("locations")
+    .update({
+      label: label ?? existing.label,
+      address_line: addressLine ?? existing.address_line,
+      city: city ?? existing.city,
+      country: country ?? existing.country,
+      is_default: isDefault ? true : existing.is_default,
+      lat: typeof lat === "number" ? lat : existing.lat,
+      lng: typeof lng === "number" ? lng : existing.lng,
+    })
+    .eq("id", req.params.id)
+    .eq("user_id", req.user.id)
+    .select()
+    .single();
+  if (error) return res.status(400).json({ error: error.message });
 
-  const row = db.prepare("SELECT * FROM locations WHERE id = ?").get(req.params.id);
-  res.json({ location: serialize(row) });
+  res.json({ location: serialize(data) });
 });
 
-locationsRouter.delete("/:id", (req, res) => {
-  const info = db
-    .prepare("DELETE FROM locations WHERE id = ? AND user_id = ?")
-    .run(req.params.id, req.user.id);
-  if (info.changes === 0) return res.status(404).json({ error: "Location not found." });
+locationsRouter.delete("/:id", async (req, res) => {
+  const { data, error } = await supabaseAdmin
+    .from("locations")
+    .delete()
+    .eq("id", req.params.id)
+    .eq("user_id", req.user.id)
+    .select();
+  if (error) return res.status(400).json({ error: error.message });
+  if (data.length === 0) return res.status(404).json({ error: "Location not found." });
   res.status(204).end();
 });

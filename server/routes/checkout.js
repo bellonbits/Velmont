@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { db } from "../db.js";
 import { requireAuth } from "../auth.js";
+import { supabaseAdmin } from "../supabase.js";
 import { getBrandName } from "../brands.js";
 
 export const checkoutRouter = Router();
@@ -23,105 +23,99 @@ function serializeOrder(order, items) {
   };
 }
 
-checkoutRouter.post("/", (req, res) => {
+checkoutRouter.post("/", async (req, res) => {
   const { items, locationId } = req.body ?? {};
 
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: "Cart is empty." });
   }
-
-  const resolved = [];
   for (const entry of items) {
-    const product = db.prepare("SELECT * FROM products WHERE id = ?").get(entry?.productId);
     const quantity = Number(entry?.quantity);
-    if (!product) {
-      return res.status(400).json({ error: `Unknown product: ${entry?.productId}` });
+    if (!entry?.productId || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
+      return res.status(400).json({ error: "Invalid cart item." });
     }
-    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
-      return res.status(400).json({ error: "Invalid quantity." });
-    }
-    if (product.stock_quantity < quantity) {
-      return res.status(409).json({
-        error:
-          product.stock_quantity === 0
-            ? `${product.name} is out of stock.`
-            : `Only ${product.stock_quantity} left of ${product.name}.`,
-      });
-    }
-    resolved.push({ productId: entry.productId, product, quantity });
   }
 
   if (locationId) {
-    const location = db
-      .prepare("SELECT id FROM locations WHERE id = ? AND user_id = ?")
-      .get(locationId, req.user.id);
+    const { data: location } = await supabaseAdmin
+      .from("locations")
+      .select("id")
+      .eq("id", locationId)
+      .eq("user_id", req.user.id)
+      .single();
     if (!location) {
       return res.status(400).json({ error: "Delivery location not found." });
     }
   }
 
-  const subtotal = resolved.reduce((sum, r) => sum + r.product.price * r.quantity, 0);
-
-  db.exec("BEGIN");
-  try {
-    const orderInfo = db
-      .prepare(
-        "INSERT INTO orders (user_id, location_id, subtotal) VALUES (?, ?, ?)",
-      )
-      .run(req.user.id, locationId ?? null, subtotal);
-
-    const insertItem = db.prepare(
-      `INSERT INTO order_items (order_id, product_id, product_name, brand_name, unit_price, quantity)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+  const { data: products } = await supabaseAdmin
+    .from("products")
+    .select("id, brand_id")
+    .in(
+      "id",
+      items.map((i) => i.productId),
     );
-    const decrementStock = db.prepare(
-      "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?",
-    );
-    for (const r of resolved) {
-      insertItem.run(
-        orderInfo.lastInsertRowid,
-        r.productId,
-        r.product.name,
-        getBrandName(r.product.brand_id),
-        r.product.price,
-        r.quantity,
-      );
-      decrementStock.run(r.quantity, r.productId);
-    }
+  const brandById = new Map((products ?? []).map((p) => [p.id, getBrandName(p.brand_id)]));
 
-    db.exec("COMMIT");
+  const payload = items.map((i) => ({
+    productId: i.productId,
+    quantity: Number(i.quantity),
+    brandName: brandById.get(i.productId) ?? "",
+  }));
 
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(orderInfo.lastInsertRowid);
-    const orderItems = db
-      .prepare("SELECT * FROM order_items WHERE order_id = ?")
-      .all(orderInfo.lastInsertRowid);
+  const { data: orderId, error } = await supabaseAdmin.rpc("create_order", {
+    p_user_id: req.user.id,
+    p_location_id: locationId ?? null,
+    p_items: payload,
+  });
 
-    res.status(201).json({ order: serializeOrder(order, orderItems) });
-  } catch (err) {
-    db.exec("ROLLBACK");
-    throw err;
+  if (error) {
+    const status = /is out of stock|left of/.test(error.message) ? 409 : 400;
+    return res.status(status).json({ error: error.message });
   }
+
+  const { data: order } = await supabaseAdmin.from("orders").select("*").eq("id", orderId).single();
+  const { data: orderItems } = await supabaseAdmin
+    .from("order_items")
+    .select("*")
+    .eq("order_id", orderId);
+
+  res.status(201).json({ order: serializeOrder(order, orderItems) });
 });
 
-checkoutRouter.get("/orders", (req, res) => {
-  const orders = db
-    .prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC")
-    .all(req.user.id);
+checkoutRouter.get("/orders", async (req, res) => {
+  const { data: orders, error } = await supabaseAdmin
+    .from("orders")
+    .select("*")
+    .eq("user_id", req.user.id)
+    .order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
 
-  const withItems = orders.map((order) => {
-    const items = db.prepare("SELECT * FROM order_items WHERE order_id = ?").all(order.id);
-    return serializeOrder(order, items);
-  });
+  const withItems = await Promise.all(
+    orders.map(async (order) => {
+      const { data: items } = await supabaseAdmin
+        .from("order_items")
+        .select("*")
+        .eq("order_id", order.id);
+      return serializeOrder(order, items ?? []);
+    }),
+  );
 
   res.json({ orders: withItems });
 });
 
-checkoutRouter.get("/orders/:id", (req, res) => {
-  const order = db
-    .prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?")
-    .get(req.params.id, req.user.id);
+checkoutRouter.get("/orders/:id", async (req, res) => {
+  const { data: order } = await supabaseAdmin
+    .from("orders")
+    .select("*")
+    .eq("id", req.params.id)
+    .eq("user_id", req.user.id)
+    .single();
   if (!order) return res.status(404).json({ error: "Order not found." });
 
-  const items = db.prepare("SELECT * FROM order_items WHERE order_id = ?").all(order.id);
-  res.json({ order: serializeOrder(order, items) });
+  const { data: items } = await supabaseAdmin
+    .from("order_items")
+    .select("*")
+    .eq("order_id", order.id);
+  res.json({ order: serializeOrder(order, items ?? []) });
 });

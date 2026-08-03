@@ -1,3 +1,5 @@
+import { supabase } from "./supabaseClient";
+
 export class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -6,11 +8,17 @@ export class ApiError extends Error {
   }
 }
 
+async function authHeaders(): Promise<Record<string, string>> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session ? { Authorization: `Bearer ${session.access_token}` } : {};
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`/api${path}`, {
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
     ...options,
+    headers: { "Content-Type": "application/json", ...(await authHeaders()), ...options.headers },
   });
 
   if (res.status === 204) return undefined as T;
@@ -34,7 +42,7 @@ export const api = {
   upload: async <T>(path: string, formData: FormData): Promise<T> => {
     const res = await fetch(`/api${path}`, {
       method: "POST",
-      credentials: "include",
+      headers: await authHeaders(),
       body: formData,
     });
     const body = await res.json().catch(() => ({}));

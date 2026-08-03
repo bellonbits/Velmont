@@ -43,15 +43,15 @@ export function ForgotPassword() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
         className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6"
       >
-        <h1 className="text-2xl font-semibold text-neutral-900">Reset your password</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Reset your password</h1>
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           {step === "email"
             ? "Enter your account email to continue."
             : "Answer your security question to set a new password."}
@@ -65,18 +65,18 @@ export function ForgotPassword() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm outline-none focus:border-neutral-400"
+                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-neutral-400 dark:border-neutral-800 dark:text-neutral-100 dark:focus:border-neutral-600"
                 placeholder="you@example.com"
               />
             </Field>
 
-            {error && <p className="text-sm text-rose-600">{error}</p>}
+            {error && <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={submitting}
-              className="mt-2 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white transition disabled:opacity-50"
+              className="mt-2 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white transition disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
             >
               {submitting ? "Checking…" : "Continue"}
             </motion.button>
@@ -84,7 +84,7 @@ export function ForgotPassword() {
         ) : (
           <form onSubmit={handleReset} className="mt-8 flex flex-col gap-4">
             <Field label="Security question">
-              <p className="text-sm text-neutral-700">{question}</p>
+              <p className="text-sm text-neutral-700 dark:text-neutral-300">{question}</p>
             </Field>
             <Field label="Answer">
               <input
@@ -92,7 +92,7 @@ export function ForgotPassword() {
                 required
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm outline-none focus:border-neutral-400"
+                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-neutral-400 dark:border-neutral-800 dark:text-neutral-100 dark:focus:border-neutral-600"
               />
             </Field>
             <Field label="New password">
@@ -102,26 +102,26 @@ export function ForgotPassword() {
                 minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm outline-none focus:border-neutral-400"
+                className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-neutral-400 dark:border-neutral-800 dark:text-neutral-100 dark:focus:border-neutral-600"
                 placeholder="At least 8 characters"
               />
             </Field>
 
-            {error && <p className="text-sm text-rose-600">{error}</p>}
+            {error && <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
             <motion.button
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={submitting}
-              className="mt-2 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white transition disabled:opacity-50"
+              className="mt-2 w-full rounded-full bg-neutral-900 py-4 text-sm font-semibold text-white transition disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
             >
               {submitting ? "Resetting…" : "Reset password"}
             </motion.button>
           </form>
         )}
 
-        <p className="mt-6 text-center text-sm text-neutral-500">
-          <Link to="/signin" className="font-semibold text-neutral-900 underline">
+        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
+          <Link to="/signin" className="font-semibold text-neutral-900 underline dark:text-neutral-100">
             Back to sign in
           </Link>
         </p>
@@ -133,7 +133,7 @@ export function ForgotPassword() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-neutral-500">
+      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
         {label}
       </span>
       {children}

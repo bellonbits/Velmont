@@ -17,10 +17,10 @@ const QUICK_TOPICS = [
 
 export function Chat() {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-xl md:px-8 md:pt-28">
-        <h1 className="text-2xl font-semibold text-neutral-900 md:text-3xl">Chat with us</h1>
-        <p className="mt-2 text-sm text-neutral-500">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 md:text-3xl">Chat with us</h1>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           Message our team directly on WhatsApp for quick help with orders, sizing, or
           availability.
         </p>
@@ -40,7 +40,7 @@ export function Chat() {
           <ArrowIcon />
         </motion.a>
 
-        <p className="mt-8 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        <p className="mt-8 text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
           Common topics
         </p>
         <div className="mt-3 flex flex-col gap-2">
@@ -50,15 +50,15 @@ export function Chat() {
               href={waLink(topic)}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-700 transition hover:border-neutral-400"
+              className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm text-neutral-700 transition hover:border-neutral-400 dark:border-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600"
             >
               {topic}
-              <ArrowIcon className="text-neutral-300" />
+              <ArrowIcon className="text-neutral-300 dark:text-neutral-600" />
             </a>
           ))}
         </div>
 
-        <p className="mt-8 text-center text-xs text-neutral-400">
+        <p className="mt-8 text-center text-xs text-neutral-400 dark:text-neutral-500">
           We typically reply within a few hours, 8am–8pm EAT.
         </p>
       </div>
