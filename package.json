@@ -8,8 +8,9 @@
     "dev:client": "vite",
     "dev:server": "node --watch --env-file=.env server/index.js",
     "server": "node --env-file=.env server/index.js",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node scripts/generate-sitemap.mjs && vite build",
     "build:capacitor": "tsc -b && VITE_API_BASE_URL=https://velmonts.vercel.app vite build && cap sync",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

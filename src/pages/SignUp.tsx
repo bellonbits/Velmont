@@ -3,11 +3,18 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth, ApiError } from "../context/AuthContext";
 import { SECURITY_QUESTIONS } from "../data/securityQuestions";
+import { useSEO } from "../lib/seo";
 
 export function SignUp() {
   const { signUp } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
+
+  useSEO({
+    title: "Create an Account | Velmont",
+    description: "Create a free Velmont account to save favourites, addresses, and track your watch orders.",
+    noindex: true,
+  });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -2,9 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { api, ApiError } from "../lib/api";
+import { useSEO } from "../lib/seo";
 
 export function ForgotPassword() {
   const navigate = useNavigate();
+
+  useSEO({
+    title: "Reset Password | Velmont",
+    description: "Reset your Velmont account password.",
+    noindex: true,
+  });
+
   const [step, setStep] = useState<"email" | "reset">("email");
   const [email, setEmail] = useState("");
   const [question, setQuestion] = useState("");

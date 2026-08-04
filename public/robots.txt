@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /account
+Disallow: /cart
+Disallow: /checkout
+Disallow: /favourites
+Disallow: /admin
+Disallow: /admin/inventory
+
+Sitemap: https://velmonts.vercel.app/sitemap.xml

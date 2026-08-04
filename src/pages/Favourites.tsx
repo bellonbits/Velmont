@@ -8,10 +8,17 @@ import { api } from "../lib/api";
 import { formatPrice } from "../lib/format";
 import { brands } from "../data/brands";
 import { useProducts } from "../context/ProductsContext";
+import { useSEO } from "../lib/seo";
 
 export function Favourites() {
   const { products } = useProducts();
   const [productIds, setProductIds] = useState<string[] | null>(null);
+
+  useSEO({
+    title: "My Favourites | Velmont",
+    description: "Your saved watches on Velmont.",
+    noindex: true,
+  });
 
   useEffect(() => {
     api.get<{ productIds: string[] }>("/favorites").then((res) => setProductIds(res.productIds));

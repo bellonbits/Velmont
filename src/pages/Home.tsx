@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ProductImage } from "../components/ProductImage";
 import { BottomNav } from "../components/BottomNav";
@@ -11,6 +11,7 @@ import { formatPrice } from "../lib/format";
 import { useAuth } from "../context/AuthContext";
 import { useProducts } from "../context/ProductsContext";
 import { api } from "../lib/api";
+import { useSEO, SITE_URL } from "../lib/seo";
 import type { Location } from "../lib/apiTypes";
 
 const grid = {
@@ -26,7 +27,8 @@ const cell = {
 export function Home() {
   const { user } = useAuth();
   const { products } = useProducts();
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [filterOpen, setFilterOpen] = useState(false);
   const [defaultLocation, setDefaultLocation] = useState<Location | null>(null);
@@ -64,6 +66,22 @@ export function Home() {
       return matchesBrand && matchesGender && matchesMovement && matchesPrice && matchesQuery;
     });
   }, [query, filters, products]);
+
+  useSEO({
+    title: "Shop All Watches — Men's, Women's & Unisex, from KSh 2,400 | Velmont Kenya",
+    description:
+      "Browse genuine watches from Casio, G-Shock, Seiko, Citizen and more. Affordable prices, real stock, and delivery across Kenya.",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      itemListElement: filtered.slice(0, 24).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SITE_URL}/product/${p.id}`,
+        name: p.name,
+      })),
+    },
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">

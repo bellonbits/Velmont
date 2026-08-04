@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useSEO } from "../lib/seo";
 
 const container = {
   hidden: {},
@@ -13,6 +14,12 @@ const item = {
 
 export function Splash() {
   const navigate = useNavigate();
+
+  useSEO({
+    title: "Velmont — Cheap Watches in Kenya | Men's & Women's Watches, Nationwide Delivery",
+    description:
+      "Shop affordable, genuine watches in Kenya from Casio, G-Shock, Seiko, Citizen and more. Men's, women's, and unisex watches from KSh 2,400, with fast delivery across Nairobi and countrywide.",
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-neutral-950 text-white md:relative">

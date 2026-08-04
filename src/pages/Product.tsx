@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useProducts } from "../context/ProductsContext";
 import { api } from "../lib/api";
+import { useSEO, SITE_URL } from "../lib/seo";
 
 export function Product() {
   const { id } = useParams();
@@ -19,8 +20,49 @@ export function Product() {
   const { addItem } = useCart();
   const { getProduct, loading } = useProducts();
   const product = id ? getProduct(id) : undefined;
+  const brand = product ? brands.find((b) => b.id === product.brandId) : undefined;
   const [favourited, setFavourited] = useState(false);
   const [added, setAdded] = useState(false);
+
+  useSEO({
+    title: product
+      ? `${brand?.name ?? ""} ${product.name} — Buy in Kenya, ${formatPrice(product.price)} | Velmont`
+      : "Watch Not Found | Velmont",
+    description: product
+      ? `${product.description} ${product.gender}'s watch, ${product.movement} movement, ${product.caseSizeMm}mm case. ${formatPrice(product.price)}, delivered anywhere in Kenya.`
+      : "This watch couldn't be found. Browse the full Velmont collection of men's and women's watches in Kenya.",
+    image: product?.image ? `${SITE_URL}${product.image}` : undefined,
+    noindex: !product,
+    structuredData: product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          image: product.image ? [`${SITE_URL}${product.image}`] : undefined,
+          description: product.description,
+          sku: product.id,
+          brand: { "@type": "Brand", name: brand?.name },
+          offers: {
+            "@type": "Offer",
+            url: `${SITE_URL}/product/${product.id}`,
+            priceCurrency: "KES",
+            price: product.price,
+            availability:
+              product.stockQuantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            itemCondition: "https://schema.org/NewCondition",
+          },
+          ...(product.reviewCount > 0
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: product.rating,
+                  reviewCount: product.reviewCount,
+                },
+              }
+            : {}),
+        }
+      : undefined,
+  });
 
   useEffect(() => {
     if (!user || !product) {
@@ -73,7 +115,6 @@ export function Product() {
     );
   }
 
-  const brand = brands.find((b) => b.id === product.brandId);
   const stockStatus = getStockStatus(product.stockQuantity);
   const outOfStock = stockStatus === "out-of-stock";
 

@@ -8,11 +8,18 @@ import { api, ApiError } from "../lib/api";
 import { formatPrice } from "../lib/format";
 import { brands } from "../data/brands";
 import { useProducts } from "../context/ProductsContext";
+import { useSEO } from "../lib/seo";
 import type { Location, Order } from "../lib/apiTypes";
 
 export function Checkout() {
   const { products } = useProducts();
   const { lines, clear } = useCart();
+
+  useSEO({
+    title: "Checkout | Velmont",
+    description: "Complete your Velmont order.",
+    noindex: true,
+  });
   const [locations, setLocations] = useState<Location[] | null>(null);
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
   const [showLocationForm, setShowLocationForm] = useState(false);

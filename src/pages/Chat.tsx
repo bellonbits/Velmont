@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { BottomNav } from "../components/BottomNav";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { useSEO } from "../lib/seo";
 
 const WHATSAPP_NUMBER = "254793046776"; // 0793 046 776 in international format
 const DEFAULT_MESSAGE = "Hi Velmont, I'd like some help with a watch.";
@@ -17,6 +18,12 @@ const QUICK_TOPICS = [
 ];
 
 export function Chat() {
+  useSEO({
+    title: "Contact Us on WhatsApp | Velmont Kenya",
+    description:
+      "Chat with Velmont on WhatsApp for help with orders, sizing, watch availability, and delivery across Kenya.",
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
       <div className="mx-auto w-full max-w-md flex-1 px-5 pb-8 pt-8 md:max-w-xl md:px-8 md:pt-28">

@@ -2,11 +2,18 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth, ApiError } from "../context/AuthContext";
+import { useSEO } from "../lib/seo";
 
 export function SignIn() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
+
+  useSEO({
+    title: "Sign In | Velmont",
+    description: "Sign in to your Velmont account to track orders and save favourites.",
+    noindex: true,
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

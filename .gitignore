@@ -31,3 +31,6 @@ dist-ssr
 
 # Supabase CLI local cache
 supabase/.temp
+
+# Regenerated at build time by scripts/generate-sitemap.mjs
+public/sitemap.xml

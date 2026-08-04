@@ -9,11 +9,18 @@ import type { PlaceSelection } from "../components/AddressAutocomplete";
 import { api } from "../lib/api";
 import { formatPrice } from "../lib/format";
 import { SECURITY_QUESTIONS } from "../data/securityQuestions";
+import { useSEO } from "../lib/seo";
 import type { Location, Order } from "../lib/apiTypes";
 
 export function Account() {
   const { user, signOut, updateProfile, uploadAvatar, updateSecurityQuestion } = useAuth();
   const navigate = useNavigate();
+
+  useSEO({
+    title: "My Account | Velmont",
+    description: "Manage your Velmont account, delivery locations, and order history.",
+    noindex: true,
+  });
   const [locations, setLocations] = useState<Location[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [showLocationForm, setShowLocationForm] = useState(false);

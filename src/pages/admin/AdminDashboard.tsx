@@ -5,6 +5,7 @@ import { useProducts } from "../../context/ProductsContext";
 import { getStockStatus } from "../../lib/stock";
 import { brands } from "../../data/brands";
 import { AdminNav } from "../../components/AdminNav";
+import { useSEO } from "../../lib/seo";
 
 interface VisitorStats {
   totalViews: number;
@@ -18,6 +19,8 @@ interface VisitorStats {
 export function AdminDashboard() {
   const { products } = useProducts();
   const [stats, setStats] = useState<VisitorStats | null>(null);
+
+  useSEO({ title: "Admin Dashboard | Velmont", description: "Velmont admin dashboard.", noindex: true });
 
   useEffect(() => {
     api.get<VisitorStats>("/admin/visitors").then(setStats);

@@ -4,6 +4,7 @@ import { BottomNav } from "../components/BottomNav";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { StoreMap } from "../components/StoreMap";
 import { stores } from "../data/stores";
+import { useSEO } from "../lib/seo";
 
 function mapsLink(store: (typeof stores)[number]) {
   const query = encodeURIComponent(`${store.name}, ${store.addressLine}, ${store.city}, Kenya`);
@@ -26,6 +27,26 @@ const cell = {
 
 export function Stores() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useSEO({
+    title: "Watch Shops Near You in Nairobi, Kenya | Velmont Stores",
+    description:
+      "Visit Velmont in person to try on watches before you buy. Find our Nairobi store address, opening hours, and directions.",
+    structuredData: stores.map((s) => ({
+      "@context": "https://schema.org",
+      "@type": "Store",
+      name: s.name,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: s.addressLine,
+        addressLocality: s.city,
+        addressCountry: "KE",
+      },
+      telephone: s.phone,
+      openingHours: s.hours,
+      geo: { "@type": "GeoCoordinates", latitude: s.lat, longitude: s.lng },
+    })),
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">

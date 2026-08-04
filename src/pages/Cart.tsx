@@ -8,12 +8,19 @@ import type { CartLine } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
 import { brands } from "../data/brands";
 import { useProducts } from "../context/ProductsContext";
+import { useSEO } from "../lib/seo";
 import type { Product } from "../data/types";
 
 export function Cart() {
   const { products } = useProducts();
   const { lines, setQuantity, removeItem } = useCart();
   const navigate = useNavigate();
+
+  useSEO({
+    title: "My Cart | Velmont",
+    description: "Review the watches in your Velmont cart before checkout.",
+    noindex: true,
+  });
 
   const cartLines = lines
     .map((line) => {

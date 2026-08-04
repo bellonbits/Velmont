@@ -6,6 +6,7 @@ import { useProducts } from "../../context/ProductsContext";
 import { api, ApiError } from "../../lib/api";
 import { formatPrice } from "../../lib/format";
 import { brands } from "../../data/brands";
+import { useSEO } from "../../lib/seo";
 import type { Product } from "../../data/types";
 
 const CASE_COLORS = ["silver", "gold", "rosegold", "black"] as const;
@@ -73,6 +74,8 @@ function productToForm(p: Product): FormFields {
 export function AdminInventory() {
   const { products, refresh } = useProducts();
   const [editing, setEditing] = useState<Product | "new" | null>(null);
+
+  useSEO({ title: "Inventory | Velmont Admin", description: "Velmont admin inventory management.", noindex: true });
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this watch? This can't be undone.")) return;
